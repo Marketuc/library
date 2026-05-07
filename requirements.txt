@@ -1,0 +1,9 @@
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+python-dotenv==1.0.1
+deepface==0.0.99
+opencv-python==4.10.0.84
+# DeepFace uses TensorFlow/Keras. Keep TensorFlow and tf-keras on matching versions.
+tensorflow==2.21.0
+tf-keras==2.21.0

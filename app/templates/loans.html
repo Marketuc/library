@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Loans - Library Face Login{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Circulation</p>
+    <h1>Loans</h1>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Issue book manually</h2>
+  <form method="post" class="form horizontal">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Book
+      <select name="book_id" required>
+        <option value="">Choose a book</option>
+        {% for book in books %}
+        <option value="{{ book.id }}">{{ book.title }} ({{ book.available_copies }} available)</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Member
+      <select name="member_id" required>
+        <option value="">Choose a member</option>
+        {% for member in members %}
+        <option value="{{ member.id }}">{{ member.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Due date
+      <input type="date" name="due_date" required>
+    </label>
+    <button class="button" type="submit">Issue</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Loan history</h2>
+  <table>
+    <thead><tr><th>Book</th><th>Borrower</th><th>Issued</th><th>Due</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for loan in loans %}
+      <tr>
+        <td>{{ loan.book.title }}</td>
+        <td>{{ loan.borrower_name }}</td>
+        <td>{{ loan.issued_at.strftime('%Y-%m-%d') }}</td>
+        <td>{{ loan.due_at.strftime('%Y-%m-%d') }}</td>
+        <td>{{ 'Returned ' + loan.returned_at.strftime('%Y-%m-%d') if loan.returned_at else 'Active' }}</td>
+        <td>
+          {% if not loan.returned_at %}
+          <form method="post" action="{{ url_for('main.return_loan', loan_id=loan.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="button secondary small-button" type="submit">Return</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6">No loans yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

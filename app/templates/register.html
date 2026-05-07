@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Register Librarian - Library Face Login{% endblock %}
+{% block content %}
+<div class="grid two">
+  <section class="card">
+    <p class="eyebrow">Enroll librarian</p>
+    <h1>Create librarian account</h1>
+    <form method="post" class="form" id="register-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="face_data" id="face-data" required>
+
+      <label>Username
+        <input name="username" autocomplete="username" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" autocomplete="email" required>
+      </label>
+      <label>Password
+        <input type="password" name="password" autocomplete="new-password" minlength="8" required>
+      </label>
+
+      <div class="camera" data-camera-root>
+        <video id="camera-video" autoplay playsinline muted></video>
+        <canvas id="camera-canvas" hidden></canvas>
+        <div class="actions">
+          <button type="button" class="button secondary" data-camera-start>Start camera</button>
+          <button type="button" class="button secondary" data-camera-capture>Capture face</button>
+        </div>
+        <p class="small" data-camera-status>No face image captured yet.</p>
+      </div>
+
+      <button class="button" type="submit">Register librarian with face</button>
+    </form>
+  </section>
+
+  <aside class="card muted-card">
+    <h2>Capture tips</h2>
+    <ul>
+      <li>Use bright, even lighting.</li>
+      <li>Keep one face in frame.</li>
+      <li>Look straight at the camera.</li>
+      <li>Avoid hats, masks, and sunglasses.</li>
+    </ul>
+    <p><a href="{{ url_for('main.student_register') }}">Need a student account instead?</a></p>
+  </aside>
+</div>
+{% endblock %}

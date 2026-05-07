@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Library Face Login{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Librarian Dashboard</p>
+    <h1>Welcome, {{ current_user.username }}</h1>
+  </div>
+</section>
+
+<div class="stats-grid">
+  <div class="card stat"><span>{{ stats.books }}</span><p>Books</p></div>
+  <div class="card stat"><span>{{ stats.students }}</span><p>Students</p></div>
+  <div class="card stat"><span>{{ stats.active_loans }}</span><p>Active loans</p></div>
+  <div class="card stat"><span>{{ stats.available_copies }}</span><p>Available copies</p></div>
+</div>
+
+<section class="card">
+  <h2>Recent loans</h2>
+  {% if recent_loans %}
+  <table>
+    <thead><tr><th>Book</th><th>Borrower</th><th>Issued</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for loan in recent_loans %}
+      <tr>
+        <td>{{ loan.book.title }}</td>
+        <td>{{ loan.borrower_name }}</td>
+        <td>{{ loan.issued_at.strftime('%Y-%m-%d') }}</td>
+        <td>{{ 'Returned' if loan.returned_at else 'Active' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p>No loans yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

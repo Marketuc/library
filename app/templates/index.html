@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Welcome - Library Face Login{% endblock %}
+
+{% block content %}
+<section class="hero-wrapper">
+  <div class="hero card">
+    
+    <div class="hero-text">
+      <p class="eyebrow">Smart Library System</p>
+
+      <h1>
+        Library Management
+        <span>with Face Recognition</span>
+      </h1>
+
+      <p class="hero-description">
+        Librarians can manage books, monitor borrowing records,
+        and organize the catalog while students securely log in
+        using face recognition technology.
+      </p>
+
+      <div class="actions">
+        <a class="button" href="{{ url_for('main.student_login') }}">
+          Student Login
+        </a>
+
+        <a class="button secondary" href="{{ url_for('main.login') }}">
+          Librarian Login
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-box">
+          <h3>100%</h3>
+          <p>Digital Records</p>
+        </div>
+
+        <div class="stat-box">
+          <h3>AI</h3>
+          <p>Face Recognition</p>
+        </div>
+
+        <div class="stat-box">
+          <h3>24/7</h3>
+          <p>Book Access</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <div class="floating-card">
+        <img
+          src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1200&auto=format&fit=crop"
+          alt="Library"
+        />
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

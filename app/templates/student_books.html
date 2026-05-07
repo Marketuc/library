@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Borrow Books - Library Face Login{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Student Catalog</p>
+    <h1>Borrow books</h1>
+    <p class="small">Choose from the books below. Available books can be borrowed immediately.</p>
+  </div>
+</section>
+
+<section class="card">
+  <form class="search" method="get">
+    <input name="q" placeholder="Search title, author, or ISBN" value="{{ query }}">
+    <button class="button secondary" type="submit">Search</button>
+  </form>
+
+  <div class="book-grid">
+    {% for book in books %}
+      <article class="book-card">
+        <img class="book-cover" src="{{ book_cover_url(book) }}" alt="Cover for {{ book.title }}">
+        <div class="book-card-body">
+          <h3>{{ book.title }}</h3>
+          <p>{{ book.author }}</p>
+          <p class="small">ISBN: {{ book.isbn or '-' }}</p>
+          <p class="availability {{ 'available' if book.available_copies > 0 else 'unavailable' }}">
+            {{ book.available_copies }} of {{ book.total_copies }} available
+          </p>
+          {% if book.id in active_book_ids %}
+            <button class="button secondary" disabled>Already borrowed</button>
+          {% elif book.available_copies > 0 %}
+            <form method="post" action="{{ url_for('main.student_borrow', book_id=book.id) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="button" type="submit">Borrow this book</button>
+            </form>
+          {% else %}
+            <button class="button secondary" disabled>Not available</button>
+          {% endif %}
+        </div>
+      </article>
+    {% else %}
+      <p>No books found.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="720" viewBox="0 0 480 720">
+  <rect width="480" height="720" rx="36" fill="#eef2ff"/>
+  <rect x="72" y="84" width="336" height="552" rx="24" fill="#ffffff" stroke="#dfe4ee" stroke-width="4"/>
+  <path d="M150 180h180M150 230h180M150 280h120" stroke="#3157d5" stroke-width="14" stroke-linecap="round"/>
+  <rect x="150" y="370" width="180" height="130" rx="18" fill="#dfe6ff"/>
+  <text x="240" y="565" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#3157d5">Book Cover</text>
+</svg>

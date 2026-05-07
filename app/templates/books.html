@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Books - Library Face Login{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Catalog</p>
+    <h1>Books</h1>
+  </div>
+  <a class="button" href="{{ url_for('main.new_book') }}">Add book</a>
+</section>
+
+<section class="card">
+  <form class="search" method="get">
+    <input name="q" placeholder="Search title, author, or ISBN" value="{{ query }}">
+    <button class="button secondary" type="submit">Search</button>
+  </form>
+
+  <table>
+    <thead><tr><th>Cover</th><th>Title</th><th>Author</th><th>ISBN</th><th>Copies</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <td><img class="cover-thumb" src="{{ book_cover_url(book) }}" alt="Cover for {{ book.title }}"></td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.isbn or '-' }}</td>
+        <td>{{ book.available_copies }}/{{ book.total_copies }}</td>
+        <td class="row-actions">
+          <a href="{{ url_for('main.edit_book', book_id=book.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('main.delete_book', book_id=book.id) }}" onsubmit="return confirm('Delete this book?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="link-button danger-text" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6">No books found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard - Library Face Login{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Student Dashboard</p>
+    <h1>Welcome, {{ current_user.username }}</h1>
+  </div>
+  <a class="button" href="{{ url_for('main.student_books') }}">Borrow books</a>
+</section>
+
+<div class="stats-grid two-stats">
+  <div class="card stat"><span>{{ stats.active_loans }}</span><p>My active loans</p></div>
+  <div class="card stat"><span>{{ stats.available_books }}</span><p>Books available</p></div>
+</div>
+
+<section class="card">
+  <div class="section-title-row">
+    <h2>My current loans</h2>
+    <a href="{{ url_for('main.student_loans') }}">View all</a>
+  </div>
+  {% if loans %}
+  <div class="book-grid compact">
+    {% for loan in loans %}
+      <article class="book-card horizontal-card">
+        <img class="book-cover" src="{{ book_cover_url(loan.book) }}" alt="Cover for {{ loan.book.title }}">
+        <div>
+          <h3>{{ loan.book.title }}</h3>
+          <p>{{ loan.book.author }}</p>
+          <p class="small">Due {{ loan.due_at.strftime('%Y-%m-%d') }}</p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p>You have no active loans.</p>
+  {% endif %}
+</section>
+
+<section class="card top-gap">
+  <div class="section-title-row">
+    <h2>Available books</h2>
+    <a href="{{ url_for('main.student_books') }}">See catalog</a>
+  </div>
+  <div class="book-grid">
+    {% for book in books %}
+      <article class="book-card">
+        <img class="book-cover" src="{{ book_cover_url(book) }}" alt="Cover for {{ book.title }}">
+        <div class="book-card-body">
+          <h3>{{ book.title }}</h3>
+          <p>{{ book.author }}</p>
+          <p class="small">{{ book.available_copies }} available</p>
+        </div>
+      </article>
+    {% else %}
+      <p>No books available right now.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Members - Library Face Login{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Patrons</p>
+    <h1>Members and Students</h1>
+  </div>
+</section>
+
+<div class="grid two">
+  <section class="card">
+    <h2>Add walk-in member</h2>
+    <form method="post" class="form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Name <input name="name" required></label>
+      <label>Email <input type="email" name="email"></label>
+      <label>Phone <input name="phone"></label>
+      <button class="button" type="submit">Add member</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Student accounts</h2>
+    <table>
+      <thead><tr><th>Username</th><th>Email</th><th>Loans</th></tr></thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student.username }}</td>
+          <td>{{ student.email }}</td>
+          <td>{{ student.student_loans|length }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3">No students yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<section class="card top-gap">
+  <h2>Walk-in member list</h2>
+  <table>
+    <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th></th></tr></thead>
+    <tbody>
+      {% for member in members %}
+      <tr>
+        <td>{{ member.name }}</td>
+        <td>{{ member.email or '-' }}</td>
+        <td>{{ member.phone or '-' }}</td>
+        <td>
+          <form method="post" action="{{ url_for('main.delete_member', member_id=member.id) }}" onsubmit="return confirm('Delete this member?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="link-button danger-text" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4">No members yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

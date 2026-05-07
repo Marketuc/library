@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Register Student - Library Face Login{% endblock %}
+{% block content %}
+<div class="grid two">
+  <section class="card">
+    <p class="eyebrow">Enroll student</p>
+    <h1>Create student account</h1>
+    <form method="post" class="form" id="register-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="face_data" id="face-data" required>
+
+      <label>Username
+        <input name="username" autocomplete="username" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" autocomplete="email" required>
+      </label>
+      <label>Password
+        <input type="password" name="password" autocomplete="new-password" minlength="8" required>
+      </label>
+
+      <div class="camera" data-camera-root>
+        <video id="camera-video" autoplay playsinline muted></video>
+        <canvas id="camera-canvas" hidden></canvas>
+        <div class="actions">
+          <button type="button" class="button secondary" data-camera-start>Start camera</button>
+          <button type="button" class="button secondary" data-camera-capture>Capture face</button>
+        </div>
+        <p class="small" data-camera-status>No face image captured yet.</p>
+      </div>
+
+      <button class="button" type="submit">Register student with face</button>
+    </form>
+  </section>
+
+  <aside class="card muted-card">
+    <h2>Student accounts</h2>
+    <p>Your student account can borrow books directly from the student catalog.</p>
+    <ul>
+      <li>Capture one clear face image.</li>
+      <li>Use password login if your webcam is unavailable.</li>
+      <li>Return borrowed books from the My Loans page.</li>
+    </ul>
+  </aside>
+</div>
+{% endblock %}

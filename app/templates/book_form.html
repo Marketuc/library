@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if book else 'Add' }} Book - Library Face Login{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <p class="eyebrow">Catalog</p>
+  <h1>{{ 'Edit book' if book else 'Add book' }}</h1>
+  <form method="post" class="form" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Title
+      <input name="title" value="{{ book.title if book else '' }}" required>
+    </label>
+    <label>Author
+      <input name="author" value="{{ book.author if book else '' }}" required>
+    </label>
+    <label>ISBN
+      <input name="isbn" value="{{ book.isbn if book and book.isbn else '' }}">
+    </label>
+    <label>Total copies
+      <input type="number" min="1" name="total_copies" value="{{ book.total_copies if book else 1 }}" required>
+    </label>
+    <label>Book cover picture
+      <input type="file" name="cover_image" accept="image/png,image/jpeg,image/webp,image/gif">
+    </label>
+    {% if book %}
+      <div class="cover-preview-row">
+        <img class="cover-thumb large" src="{{ book_cover_url(book) }}" alt="Cover for {{ book.title }}">
+        <p class="small">Upload a new picture only if you want to replace the current cover.</p>
+      </div>
+    {% endif %}
+    <div class="actions">
+      <button class="button" type="submit">Save</button>
+      <a class="button secondary" href="{{ url_for('main.books') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

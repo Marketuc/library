@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}My Loans - Library Face Login{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Student Loans</p>
+    <h1>My borrowed books</h1>
+  </div>
+  <a class="button" href="{{ url_for('main.student_books') }}">Borrow another book</a>
+</section>
+
+<section class="card">
+  <div class="book-grid compact">
+    {% for loan in loans %}
+      <article class="book-card horizontal-card">
+        <img class="book-cover" src="{{ book_cover_url(loan.book) }}" alt="Cover for {{ loan.book.title }}">
+        <div class="book-card-body">
+          <h3>{{ loan.book.title }}</h3>
+          <p>{{ loan.book.author }}</p>
+          <p class="small">Borrowed {{ loan.issued_at.strftime('%Y-%m-%d') }}</p>
+          <p class="small">Due {{ loan.due_at.strftime('%Y-%m-%d') }}</p>
+          <p class="availability {{ 'available' if loan.returned_at else 'unavailable' }}">
+            {{ 'Returned ' + loan.returned_at.strftime('%Y-%m-%d') if loan.returned_at else 'Currently borrowed' }}
+          </p>
+          {% if not loan.returned_at %}
+            <form method="post" action="{{ url_for('main.student_return_loan', loan_id=loan.id) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="button secondary" type="submit">Return book</button>
+            </form>
+          {% endif %}
+        </div>
+      </article>
+    {% else %}
+      <p>You have not borrowed any books yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
