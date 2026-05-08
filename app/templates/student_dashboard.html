@@ -1,60 +1,205 @@
 {% extends "base.html" %}
 {% block title %}Student Dashboard - Library Face Login{% endblock %}
+{% block page_styles %}
+<style>
+  .student-dash {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .student-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    padding: 2rem;
+    background:
+      radial-gradient(circle at top left, rgba(49, 87, 213, 0.22), transparent 32%),
+      linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
+    border: 1px solid var(--border);
+    box-shadow: 0 18px 45px rgba(24, 32, 51, 0.08);
+  }
+
+  .student-hero-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .student-hero h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1;
+  }
+
+  .student-hero p {
+    max-width: 560px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .student-quick-actions {
+    display: flex;
+    gap: .8rem;
+    flex-wrap: wrap;
+  }
+
+  .student-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .student-stat-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 1.4rem;
+    box-shadow: 0 12px 30px rgba(24, 32, 51, 0.06);
+    transition: .25s ease;
+  }
+
+  .student-stat-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .student-stat-card span {
+    display: block;
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: var(--primary);
+  }
+
+  .student-stat-card p {
+    margin: .3rem 0 0;
+    color: var(--muted);
+  }
+
+  .student-section {
+    background: rgba(255, 255, 255, .82);
+    backdrop-filter: blur(12px);
+  }
+
+  .student-book-card {
+    transition: .25s ease;
+  }
+
+  .student-book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 35px rgba(24, 32, 51, 0.12);
+  }
+
+  .student-book-card .book-cover {
+    transition: .25s ease;
+  }
+
+  .student-book-card:hover .book-cover {
+    transform: scale(1.03);
+  }
+
+  .student-empty {
+    padding: 1.5rem;
+    border-radius: 18px;
+    background: #f8fafc;
+    color: var(--muted);
+    border: 1px dashed var(--border);
+  }
+
+  @media (max-width: 700px) {
+    .student-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .student-hero {
+      padding: 1.4rem;
+    }
+  }
+</style>
+{% endblock %}
 {% block content %}
-<section class="page-header">
-  <div>
-    <p class="eyebrow">Student Dashboard</p>
-    <h1>Welcome, {{ current_user.username }}</h1>
-  </div>
-  <a class="button" href="{{ url_for('main.student_books') }}">Borrow books</a>
-</section>
+<div class="student-dash">
 
-<div class="stats-grid two-stats">
-  <div class="card stat"><span>{{ stats.active_loans }}</span><p>My active loans</p></div>
-  <div class="card stat"><span>{{ stats.available_books }}</span><p>Books available</p></div>
-</div>
+  <section class="student-hero">
+    <div class="student-hero-content">
+      <div>
+        <p class="eyebrow">Student Dashboard</p>
+        <h1>Welcome, {{ current_user.username }}</h1>
+        <p>
+          Browse available books, borrow your next read, and keep track of your current loans from one place.
+        </p>
+      </div>
 
-<section class="card">
-  <div class="section-title-row">
-    <h2>My current loans</h2>
-    <a href="{{ url_for('main.student_loans') }}">View all</a>
-  </div>
-  {% if loans %}
-  <div class="book-grid compact">
-    {% for loan in loans %}
-      <article class="book-card horizontal-card">
-        <img class="book-cover" src="{{ book_cover_url(loan.book) }}" alt="Cover for {{ loan.book.title }}">
-        <div>
-          <h3>{{ loan.book.title }}</h3>
-          <p>{{ loan.book.author }}</p>
-          <p class="small">Due {{ loan.due_at.strftime('%Y-%m-%d') }}</p>
-        </div>
-      </article>
-    {% endfor %}
-  </div>
-  {% else %}
-    <p>You have no active loans.</p>
-  {% endif %}
-</section>
+      <div class="student-quick-actions">
+        <a class="button" href="{{ url_for('main.student_books') }}">Borrow books</a>
+        <a class="button secondary" href="{{ url_for('main.student_loans') }}">My loans</a>
+      </div>
+    </div>
+  </section>
 
-<section class="card top-gap">
-  <div class="section-title-row">
-    <h2>Available books</h2>
-    <a href="{{ url_for('main.student_books') }}">See catalog</a>
+  <div class="student-stats">
+    <div class="student-stat-card">
+      <span>{{ stats.active_loans }}</span>
+      <p>My active loans</p>
+    </div>
+
+    <div class="student-stat-card">
+      <span>{{ stats.available_books }}</span>
+      <p>Books available</p>
+    </div>
   </div>
-  <div class="book-grid">
-    {% for book in books %}
-      <article class="book-card">
-        <img class="book-cover" src="{{ book_cover_url(book) }}" alt="Cover for {{ book.title }}">
-        <div class="book-card-body">
-          <h3>{{ book.title }}</h3>
-          <p>{{ book.author }}</p>
-          <p class="small">{{ book.available_copies }} available</p>
-        </div>
-      </article>
+
+  <section class="card student-section">
+    <div class="section-title-row">
+      <h2>My current loans</h2>
+      <a href="{{ url_for('main.student_loans') }}">View all</a>
+    </div>
+
+    {% if loans %}
+      <div class="book-grid compact">
+        {% for loan in loans %}
+          <article class="book-card horizontal-card student-book-card">
+            <img class="book-cover" src="{{ book_cover_url(loan.book) }}" alt="Cover for {{ loan.book.title }}">
+            <div>
+              <h3>{{ loan.book.title }}</h3>
+              <p>{{ loan.book.author }}</p>
+              <p class="small">Due {{ loan.due_at.strftime('%Y-%m-%d') }}</p>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
     {% else %}
-      <p>No books available right now.</p>
-    {% endfor %}
-  </div>
-</section>
+      <div class="student-empty">
+        You have no active loans yet. Start by borrowing a book from the catalog.
+      </div>
+    {% endif %}
+  </section>
+
+  <section class="card student-section">
+    <div class="section-title-row">
+      <h2>Available books</h2>
+      <a href="{{ url_for('main.student_books') }}">See catalog</a>
+    </div>
+
+    <div class="book-grid">
+      {% for book in books %}
+        <article class="book-card student-book-card">
+          <img class="book-cover" src="{{ book_cover_url(book) }}" alt="Cover for {{ book.title }}">
+          <div class="book-card-body">
+            <h3>{{ book.title }}</h3>
+            <p>{{ book.author }}</p>
+            <p class="availability available">{{ book.available_copies }} available</p>
+          </div>
+        </article>
+      {% else %}
+        <div class="student-empty">
+          No books available right now.
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
 {% endblock %}
